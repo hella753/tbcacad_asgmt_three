@@ -2,7 +2,7 @@ import time
 import requests
 import json
 import threading
-import concurrent.futures
+# import concurrent.futures
 
 lock = threading.Lock()
 
@@ -14,15 +14,18 @@ def init_file():
 def fetch_data(idx):
     url = f"https://jsonplaceholder.typicode.com/posts/{idx}"
     response = requests.get(url)
-    response.raise_for_status()
-    data = response.json()
-    with lock:
-        with open("data.json", "r") as outfile:
-            data_list = json.load(outfile)
-            # print(data_list)
-        data_list.append(data)
-        with open("data.json", "w") as outfile:
-            json.dump(data_list, outfile, indent=2)
+
+    if response.status_code == 200:
+        data = response.json()
+        with lock:
+            with open("data.json", "r") as outfile:
+                data_list = json.load(outfile)
+                # print(data_list)
+            data_list.append(data)
+            with open("data.json", "w") as outfile:
+                json.dump(data_list, outfile, indent=2)
+    else:
+        print(f"Error: {response.status_code}")
 
 
 if __name__ == '__main__':
