@@ -6,9 +6,9 @@ import concurrent.futures
 
 lock = threading.Lock()
 
-
-with open("data.json", "w") as init_file:
-    json.dump([], init_file )
+def init_file():
+    with open("data.json", "w") as start_file:
+        json.dump([], start_file )
 
 
 def fetch_data(idx):
@@ -28,7 +28,7 @@ def fetch_data(idx):
 if __name__ == '__main__':
     start = time.perf_counter()
     print(f"start time {start}")
-
+    init_file()
 
     threads = []
     # threading ბიბლიოთეკით
